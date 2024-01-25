@@ -11,11 +11,18 @@ from .serializers import PostSerializer, CommentSerializer, CommentCreateSeriali
 
 
 class PostCreate(generics.CreateAPIView):
+    """
+    Create a new post.
+    """
+
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
+        """
+        Check if the user is old enough to create a post.
+        """
         today = date.today()
         birth_date_str = str(self.request.user.birth_date)
         birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
@@ -32,21 +39,36 @@ class PostCreate(generics.CreateAPIView):
 
 
 class PostList(generics.ListAPIView):
+    """
+    List all posts.
+    """
+
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
 
 class PostDetail(generics.RetrieveAPIView):
+    """
+    Retrieve a post.
+    """
+
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
 
 class PostUpdate(generics.UpdateAPIView):
+    """
+    Update a post.
+    """
+
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAdminUser | IsOwner]
 
     def perform_update(self, serializer):
+        """
+        Check if the user has permission to edit the post.
+        """
         post = self.get_object()
         if post.user != self.request.user and not self.request.user.is_staff:
             return Response(
@@ -57,10 +79,17 @@ class PostUpdate(generics.UpdateAPIView):
 
 
 class PostDelete(generics.DestroyAPIView):
+    """
+    Delete a post.
+    """
+
     queryset = Post.objects.all()
     permission_classes = [permissions.IsAdminUser | IsOwner]
 
     def delete(self, request, *args, **kwargs):
+        """
+        Check if the user has permission to delete the post.
+        """
         post = self.get_object()
         if not request.user.is_staff and post.user != request.user:
             return Response(
@@ -71,11 +100,18 @@ class PostDelete(generics.DestroyAPIView):
 
 
 class CommentCreate(generics.CreateAPIView):
+    """
+    Create a new comment.
+    """
+
     queryset = Comment.objects.all()
     serializer_class = CommentCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer, *args, **kwargs):
+        """
+        Check if the post exists.
+        """
         post_id = self.kwargs.get("post_id")
         try:
             post = Post.objects.get(pk=post_id)
@@ -89,39 +125,61 @@ class CommentCreate(generics.CreateAPIView):
 
 
 class CommentList(generics.ListAPIView):
+    """
+    List all comments.
+    """
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
 
 class CommentDetail(generics.RetrieveAPIView):
+    """
+    Retrieve a comment.
+    """
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
 
 class CommentUpdate(generics.UpdateAPIView):
+    """
+    Update a comment.
+    """
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAdminUser | IsOwner]
 
     def perform_update(self, serializer):
+        """
+        Check if the user has permission to edit the comment.
+        """
         post = self.get_object()
         if post.user != self.request.user and not self.request.user.is_staff:
             return Response(
-                {"message": "You do not have permission to edit this post."},
+                {"message": "You do not have permission to edit this comment."},
                 status=status.HTTP_403_FORBIDDEN,
             )
         serializer.save()
 
 
 class CommentDelete(generics.DestroyAPIView):
+    """
+    Delete a comment.
+    """
+
     queryset = Comment.objects.all()
     permission_classes = [permissions.IsAdminUser | IsOwner]
 
     def delete(self, request, *args, **kwargs):
+        """
+        Check if the user has permission to delete the comment.
+        """
         post = self.get_object()
         if not request.user.is_staff and post.user != request.user:
             return Response(
-                {"message": "You do not have permission to delete this post."},
+                {"message": "You do not have permission to delete this comment."},
                 status=status.HTTP_403_FORBIDDEN,
             )
         return self.destroy(request, *args, **kwargs)

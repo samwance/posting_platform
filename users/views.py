@@ -8,12 +8,20 @@ from .serializers import UserSerializer
 
 
 class UserList(generics.ListAPIView):
+    """
+    List of all users.
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAdminUser | permissions.IsAuthenticated]
 
 
 class UserCreate(generics.CreateAPIView):
+    """
+    Create a new user.
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -33,12 +41,20 @@ class UserCreate(generics.CreateAPIView):
 
 
 class UserDetail(generics.RetrieveAPIView):
+    """
+    Detailed information about the user.
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated | permissions.IsAdminUser]
 
 
 class UserUpdate(generics.UpdateAPIView):
+    """
+    Update user information.
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsProfileOwner | permissions.IsAdminUser]
@@ -59,6 +75,10 @@ class UserUpdate(generics.UpdateAPIView):
 
 
 class UserDelete(generics.DestroyAPIView):
+    """
+    Delete user.
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAdminUser]
