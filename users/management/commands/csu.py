@@ -11,7 +11,7 @@ class Command(BaseCommand):
             is_staff=True,
             is_active=True,
             username="admin1",
-            birth_date='2003-01-01'
+            birth_date="2003-01-01",
         )
 
         user.set_password("123")

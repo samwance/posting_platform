@@ -18,10 +18,16 @@ class PostCreate(generics.CreateAPIView):
     def perform_create(self, serializer):
         today = date.today()
         birth_date_str = str(self.request.user.birth_date)
-        birth_date = datetime.strptime(birth_date_str, '%Y-%m-%d').date()
-        age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+        birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
+        age = (
+            today.year
+            - birth_date.year
+            - ((today.month, today.day) < (birth_date.month, birth_date.day))
+        )
         if age < 18:
-            raise ValidationError('User must be at least 18 years old to create a post.')
+            raise ValidationError(
+                "User must be at least 18 years old to create a post."
+            )
         serializer.save(user=self.request.user)
 
 
@@ -43,8 +49,10 @@ class PostUpdate(generics.UpdateAPIView):
     def perform_update(self, serializer):
         post = self.get_object()
         if post.user != self.request.user and not self.request.user.is_staff:
-            return Response({'message': 'You do not have permission to edit this post.'},
-                            status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"message": "You do not have permission to edit this post."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         serializer.save()
 
 
@@ -55,8 +63,10 @@ class PostDelete(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         post = self.get_object()
         if not request.user.is_staff and post.user != request.user:
-            return Response({'message': 'You do not have permission to delete this post.'},
-                            status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"message": "You do not have permission to delete this post."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         return self.destroy(request, *args, **kwargs)
 
 
@@ -66,12 +76,16 @@ class CommentCreate(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer, *args, **kwargs):
-        post_id = self.kwargs.get('post_id')
+        post_id = self.kwargs.get("post_id")
         try:
             post = Post.objects.get(pk=post_id)
         except Post.DoesNotExist:
-            raise serializers.ValidationError(f"There's no any post with given id {post_id}")
-        serializer.save(user=self.request.user, post=post, text=self.request.data.get('text'))
+            raise serializers.ValidationError(
+                f"There's no any post with given id {post_id}"
+            )
+        serializer.save(
+            user=self.request.user, post=post, text=self.request.data.get("text")
+        )
 
 
 class CommentList(generics.ListAPIView):
@@ -92,8 +106,10 @@ class CommentUpdate(generics.UpdateAPIView):
     def perform_update(self, serializer):
         post = self.get_object()
         if post.user != self.request.user and not self.request.user.is_staff:
-            return Response({'message': 'You do not have permission to edit this post.'},
-                            status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"message": "You do not have permission to edit this post."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         serializer.save()
 
 
@@ -104,6 +120,8 @@ class CommentDelete(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         post = self.get_object()
         if not request.user.is_staff and post.user != request.user:
-            return Response({'message': 'You do not have permission to delete this post.'},
-                            status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"message": "You do not have permission to delete this post."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         return self.destroy(request, *args, **kwargs)

@@ -19,16 +19,16 @@ class UserCreate(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = User.objects.create(
-            phone_number=self.request.data.get('phone_number'),
+            phone_number=self.request.data.get("phone_number"),
             is_superuser=False,
             is_staff=False,
             is_active=True,
-            username=self.request.data.get('username'),
-            birth_date=self.request.data.get('birth_date'),
-            email=self.request.data.get('email')
+            username=self.request.data.get("username"),
+            birth_date=self.request.data.get("birth_date"),
+            email=self.request.data.get("email"),
         )
 
-        user.set_password(self.request.data.get('password'))
+        user.set_password(self.request.data.get("password"))
         user.save()
 
 
@@ -44,15 +44,17 @@ class UserUpdate(generics.UpdateAPIView):
     permission_classes = [IsProfileOwner | permissions.IsAdminUser]
 
     def get_object(self):
-        user = self.get_queryset().get(pk=self.kwargs['pk'])
+        user = self.get_queryset().get(pk=self.kwargs["pk"])
         self.check_object_permissions(self.request, user)
         return user
 
     def put(self, request, *args, **kwargs):
         user = self.get_object()
         if user != request.user and not request.user.is_staff:
-            return Response({'message': 'You do not have permission to edit this user.'},
-                            status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"message": "You do not have permission to edit this user."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         return self.update(request, *args, **kwargs)
 
 
@@ -64,6 +66,8 @@ class UserDelete(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         user = self.get_object()
         if not request.user.is_staff:
-            return Response({'message': 'You do not have permission to delete this user.'},
-                            status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"message": "You do not have permission to delete this user."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         return self.destroy(request, *args, **kwargs)

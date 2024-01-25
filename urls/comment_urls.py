@@ -1,7 +1,13 @@
 from django.urls import path
 
 from posts.apps import PostsConfig
-from posts.views import CommentCreate, CommentList, CommentUpdate, CommentDelete, CommentDetail
+from posts.views import (
+    CommentCreate,
+    CommentList,
+    CommentUpdate,
+    CommentDelete,
+    CommentDetail,
+)
 
 app_name = PostsConfig.name
 
