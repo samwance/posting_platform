@@ -8,6 +8,7 @@ class User(AbstractUser):
     phone number, date of birth and account information (username, password, email, etc).
     """
 
+    username = models.CharField(unique=True, max_length=255, verbose_name='login')
     email = models.EmailField(unique=True)
     phone_number = models.CharField(unique=True, max_length=17)
     birth_date = models.DateField()
