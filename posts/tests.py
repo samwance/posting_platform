@@ -159,6 +159,26 @@ class PostValidationTests(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_create_post_underage_user(self):
+        underage_user = User.objects.create_user(
+            username="underage_user",
+            password="testpass",
+            phone_number="1234567",
+            birth_date="2015-02-23",
+            email="test@yandex.ru"
+        )
+        client = APIClient()
+        client.force_authenticate(user=underage_user)
+        post_data = {
+            "title": "Test Post",
+            "text": "This is a test post.",
+            "user": underage_user.id,
+        }
+        response = client.post(
+            reverse("posts:post_create"), post_data, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_create_post_no_title(self):
         post_data = {"text": "This is a test post.", "user": self.user.id}
         response = self.client.post(

@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import status
 from .models import Post, Comment
 from .permissions import IsOwner
-from .serializers import PostSerializer, CommentSerializer, CommentCreateSerializer
+from .serializers import PostSerializer, CommentSerializer, CommentCreateSerializer, PostCreateSerializer
 
 
 class PostCreate(generics.CreateAPIView):
@@ -16,7 +16,7 @@ class PostCreate(generics.CreateAPIView):
     """
 
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = PostCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
@@ -32,7 +32,7 @@ class PostCreate(generics.CreateAPIView):
             - ((today.month, today.day) < (birth_date.month, birth_date.day))
         )
         if age < 18:
-            raise ValidationError(
+            raise serializers.ValidationError(
                 "User must be at least 18 years old to create a post."
             )
         serializer.save(user=self.request.user)

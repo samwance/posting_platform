@@ -4,8 +4,14 @@ from posts.models import Post, Comment
 from posts.validators import validate_title
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostCreateSerializer(serializers.ModelSerializer):
     title = serializers.CharField(validators=[validate_title])
+    class Meta:
+        model = Post
+        fields = ("title", "text", "image",)
+
+
+class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
