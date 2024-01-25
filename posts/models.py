@@ -19,6 +19,10 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = 'post'
+        verbose_name_plural = 'posts'
+
 
 class Comment(models.Model):
     """
@@ -35,3 +39,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        verbose_name = 'comment'
+        verbose_name_plural = 'comments'
