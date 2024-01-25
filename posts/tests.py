@@ -13,9 +13,10 @@ class PostTests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username="testuser",
-            password="testpass",
+            password="12345678",
             phone_number="12345678",
             birth_date="2003-01-01",
+            email="test@mail.ru"
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -69,9 +70,10 @@ class CommentTests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username="testuser",
-            password="testpass",
+            password="12345678",
             phone_number="12345678",
             birth_date="2003-01-01",
+            email="test@mail.ru"
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -141,9 +143,10 @@ class PostValidationTests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username="testuser",
-            password="testpass",
+            password="12345678",
             phone_number="12345678",
             birth_date="2003-01-01",
+            email="test@mail.ru"
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -204,9 +207,10 @@ class CommentValidationTests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username="testuser",
-            password="testpass",
+            password="12345678",
             phone_number="12345678",
             birth_date="2003-01-01",
+            email="test@mail.ru"
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -251,14 +255,14 @@ class PermissionsTests(APITestCase):
     def setUp(self):
         self.owner_user = User.objects.create_user(
             username="owneruser",
-            password="testpass1",
+            password="12345678",
             phone_number="12345678",
             birth_date="2003-01-01",
             email="test@yandex.ru",
         )
         self.user = User.objects.create_user(
             username="testuser",
-            password="testpass",
+            password="123456789",
             phone_number="123456789",
             birth_date="2003-01-01",
             email="test2@yandex.ru",
