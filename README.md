@@ -20,7 +20,7 @@ python manage.py migrate
 ```
 To create a superuser for the Django admin site:
 ```
-python manage.py createsuperuser
+python manage.py csu
 ```
 
 Start the Django development server:
