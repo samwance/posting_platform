@@ -1,7 +1,7 @@
-# Paid content posting platform
+# Content posting platform
 
 ### Description: 
-A platform for publishing user-generated content. This project utilizes Django and PostgreSQL as the backend framework and database, respectively. User registration is based on phone numbers.
+A platform for publishing user-generated content. This project utilizes Django and PostgreSQL as the backend framework and database, respectively. User registration is based on usernames (logins).
 ## Getting Started:
 
 1) Clone the repository:
