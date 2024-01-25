@@ -4,7 +4,7 @@ from rest_framework.views import status
 
 from .models import User
 from .permissions import IsProfileOwner
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserCreateSerializer
 
 
 class UserList(generics.ListAPIView):
@@ -23,7 +23,7 @@ class UserCreate(generics.CreateAPIView):
     """
 
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserCreateSerializer
 
     def perform_create(self, serializer):
         user = User.objects.create(

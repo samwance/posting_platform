@@ -7,7 +7,7 @@ from posts.models import Post, Comment
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("__str__",)
+    list_display = ("__str__", 'id')
     list_filter = ("created_at",)
 
     def view_the_author(self, obj):
@@ -21,4 +21,4 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("__str__",)
+    list_display = ("__str__", 'id')
