@@ -15,7 +15,6 @@ class UserTests(APITestCase):
             phone_number="12345678",
             birth_date="2003-01-01",
             is_staff=True,
-            email="test@mail.ru"
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -68,6 +67,23 @@ class UserTests(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+    def test_get_user_detail_with_non_existent_user(self):
+        response = self.client.get(
+            reverse("users:user_retrieve", kwargs={"pk": 9999})
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_create_user_long_password(self):
+        user_data = {
+            "phone_number": "888888888888888888",
+            "username": "newuser",
+            "birth_date": "2004-01-01",
+            "email": "newuser@yandex.ru",
+            "password": "12345678",
+        }
+        response = self.client.post(reverse("users:register"), user_data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
 class UserValidationTests(APITestCase):
     def test_register_invalid_email(self):
@@ -108,14 +124,14 @@ class IsOwnerPermissionsTests(APITestCase):
     def setUp(self):
         self.owner_user = User.objects.create_user(
             username="owneruser",
-            password="12345678",
+            password="testpass1",
             phone_number="12345678",
             birth_date="2003-01-01",
             email="test@yandex.ru",
         )
         self.user = User.objects.create_user(
             username="testuser",
-            password="123456789",
+            password="testpass",
             phone_number="123456789",
             birth_date="2003-01-01",
             email="test2@yandex.ru",
